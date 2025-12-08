@@ -576,7 +576,8 @@ class Team(YahooFantasyObject):
         self.manager: Manager = self._extracted_data.get("manager", Manager({}))
         self.managers: List[Manager] = self._extracted_data.get("managers", [])
         self.matchups: List[Matchup] = self._extracted_data.get("matchups", [])
-        self.name: bytes = self._extracted_data.get("name", "").encode("utf-8")  # support special characters
+        raw_name = self._extracted_data.get("name", "")
+        self.name: bytes = str(raw_name).encode("utf-8")  # support special characters
         self.number_of_moves: int = self._extracted_data.get("number_of_moves", 0)
         self.number_of_trades: int = self._extracted_data.get("number_of_trades", 0)
         self.roster: Roster = self._extracted_data.get("roster", Roster({}))
