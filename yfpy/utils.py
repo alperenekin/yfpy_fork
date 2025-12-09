@@ -188,16 +188,23 @@ def convert_strings_to_numeric_equivalents(json_obj: Any) -> Union[int, float, A
 
     """
     if isinstance(json_obj, str):
-
-        if len(json_obj) > 1 and str.startswith(json_obj, "0"):
+        # Preserve strings with leading zeros (e.g. "01", "007")
+        if len(json_obj) > 1 and json_obj.startswith("0"):
             return json_obj
-        else:
-            if str.isdigit(json_obj):
-                return int(json_obj)
-            elif str.isdigit(re.sub("[-]", "", re.sub("[.]", "", json_obj, count=1), count=1)):
+        # Pure integer
+        if json_obj.isdigit():
+            return int(json_obj)
+        # Try safe float conversion, but only if it truly parses
+        try:
+            # Allow one leading minus and one dot for floats (e.g. "-3.5")
+            cleaned = re.sub("[-]", "", re.sub("[.]", "", json_obj, count=1), count=1)
+            if cleaned.isdigit():
                 return float(json_obj)
-            else:
-                return json_obj
+        except ValueError:
+            # Fall through to return original string
+            pass
+        # Fallback: leave it as string (handles values like "6-7")
+        return json_obj
     else:
         return json_obj
 
