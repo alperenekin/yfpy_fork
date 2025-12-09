@@ -513,7 +513,8 @@ class YahooFantasySportsQuery(object):
         """
         if not self.offline:
             response = self.get_response(url)
-            raw_response_data = response.json().get(self._fantasy_content_data_field)
+            response_json = response.json()
+            raw_response_data = response_json.get(self._fantasy_content_data_field)
 
             # print(json.dumps(raw_response_data, indent=2))
 
@@ -542,8 +543,12 @@ class YahooFantasySportsQuery(object):
             else:
                 error_msg = f"No data found when attempting extraction from fields: {data_key_list}"
                 logger.error(error_msg)
-                raise YahooFantasySportsDataNotFound(error_msg, payload=data_key_list, url=response.url)
-
+                raise YahooFantasySportsDataNotFound(
+                    error_msg,
+                    payload=data_key_list,
+                    url=response.url,
+                    yahoo_raw=response_json,
+                )
             # unpack, parse, and assign data types to all retrieved data content
             unpacked = unpack_data(raw_response_data, YahooFantasyObject)
             logger.debug(
