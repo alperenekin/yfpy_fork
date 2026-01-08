@@ -446,7 +446,8 @@ class League(YahooFantasyObject):
         self.league_type: str = self._extracted_data.get("league_type", "")
         self.league_update_timestamp: Optional[int] = self._extracted_data.get("league_update_timestamp", None)
         self.logo_url: str = self._extracted_data.get("logo_url", "")
-        self.name: bytes = self._extracted_data.get("name", "").encode("utf-8")  # support special characters
+        raw_name = self._extracted_data.get("name", "")
+        self.name: bytes = str(raw_name).encode("utf-8")  # support special characters   
         self.num_teams: int = self._extracted_data.get("num_teams", 0)
         self.password: str = self._extracted_data.get("password", "")
         self.payment_deadline: str = self._extracted_data.get("payment_deadline", "")
