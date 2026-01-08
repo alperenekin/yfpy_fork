@@ -514,7 +514,6 @@ class YahooFantasySportsQuery(object):
         if not self.offline:
             response = self.get_response(url)
             response_json = response.json()
-            logger.info(f"Response JSON:{response_json}")
             raw_response_data = response_json.get(self._fantasy_content_data_field)
 
             # print(json.dumps(raw_response_data, indent=2))
